@@ -1,0 +1,38 @@
+{
+  "name": "primatrix-backend",
+  "version": "1.0.0",
+  "description": "Project is developed as part of Primatrix",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "eslint src/**/*.js",
+    "start": "node ./src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": [],
+  "author": "Tymofii Vysochynskyi",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.10",
+    "pino-pretty": "^13.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.11.0",
+    "bad-words": "^4.0.0",
+    "bcrypt": "^6.0.0",
+    "cloudinary": "^2.7.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.0.1",
+    "helmet": "^8.1.0",
+    "http-errors": "^2.0.0",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.0.1",
+    "mysql2": "^3.14.3",
+    "pino": "^9.7.0",
+    "pino-http": "^10.5.0",
+    "validator": "^13.15.15"
+  }
+}
