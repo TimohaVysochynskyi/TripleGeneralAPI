@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
 import createHttpError from 'http-errors';
 
-import { Session } from '../models/Session.js';
-import { User } from '../models/User.js';
+import { Session } from '../models/auth/Session.js';
+import { User } from '../models/auth/User.js';
 import { env } from '../utils/env.js';
 
 const JWT_SECRET = env('JWT_SECRET');
