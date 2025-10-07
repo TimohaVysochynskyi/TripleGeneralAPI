@@ -1,13 +1,15 @@
 import createHttpError from 'http-errors';
-import { env } from '../utils/env.js';
 
 export const authAdmin = (req, res, next) => {
-  const adminPassword = env('ADMIN_PASSWORD');
-  const providedPassword = req.headers['x-admin-password'];
+  // Check if user is authenticated (set by authenticate middleware)
+  if (!req.user) {
+    return next(createHttpError(401, 'Необхідна аутентифікація'));
+  }
 
-  if (!providedPassword || providedPassword !== adminPassword) {
+  // Check if user has admin role
+  if (!req.user.is_admin) {
     return next(
-      createHttpError(403, 'Access denied: Admin privileges required.'),
+      createHttpError(403, 'Доступ заборонено: потрібні права адміністратора'),
     );
   }
 

@@ -3,7 +3,7 @@ import { pool } from '../../database/connection.js';
 export class User {
   static async findByEmail(email) {
     const [rows] = await pool.execute(
-      'SELECT id, username, email, password, name, surname, photo, banned FROM users WHERE email = ?',
+      'SELECT id, username, email, password, name, surname, photo, passport_valid, is_admin, banned FROM users WHERE email = ?',
       [email],
     );
     return rows[0] || null;
@@ -11,7 +11,7 @@ export class User {
 
   static async findByUsername(username) {
     const [rows] = await pool.execute(
-      'SELECT id, username, email, password, name, surname, photo, banned FROM users WHERE username = ?',
+      'SELECT id, username, email, password, name, surname, photo, passport_valid, is_admin, banned FROM users WHERE username = ?',
       [username],
     );
     return rows[0] || null;
@@ -19,7 +19,7 @@ export class User {
 
   static async findById(id) {
     const [rows] = await pool.execute(
-      'SELECT id, username, email, name, surname, photo, last_online, balance, passport_valid, is_online, banned FROM users WHERE id = ?',
+      'SELECT id, username, email, name, surname, photo, last_online, balance, passport_valid, is_admin, is_online, banned FROM users WHERE id = ?',
       [id],
     );
     return rows[0] || null;
@@ -42,5 +42,12 @@ export class User {
 
   static async setOffline(id) {
     await pool.execute('UPDATE users SET is_online = 0 WHERE id = ?', [id]);
+  }
+
+  static async updatePassportValid(id, isValid) {
+    await pool.execute('UPDATE users SET passport_valid = ? WHERE id = ?', [
+      isValid ? 1 : 0,
+      id,
+    ]);
   }
 }

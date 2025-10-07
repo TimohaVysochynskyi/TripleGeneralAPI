@@ -1,12 +1,23 @@
-import { HttpError } from "http-errors";
+import { HttpError } from 'http-errors';
 
 export const errorHandler = (error, req, res, next) => {
-  if (error instanceof HttpError)
-    res
+  // Log the error for debugging
+  console.error('❌ Error:', error);
+
+  if (error instanceof HttpError) {
+    return res
       .status(error.status)
-      .send({ status: error.status, message: error.name, data: error });
+      .send({ status: error.status, message: error.message, data: error });
+  }
 
   res
     .status(500)
-    .send({ status: 500, message: "Something went wrong", data: error });
+    .send({
+      status: 500,
+      message: 'Something went wrong',
+      data: {
+        message: error.message,
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
+      },
+    });
 };

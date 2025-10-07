@@ -32,12 +32,12 @@ export const registerUser = async (userData) => {
   // Check if user already exists
   const existingUserByEmail = await User.findByEmail(email);
   if (existingUserByEmail) {
-    throw createHttpError(409, 'Пользователь с таким email уже существует');
+    throw createHttpError(409, 'Користувач з таким email вже існує');
   }
 
   const existingUserByNickname = await User.findByUsername(nickname);
   if (existingUserByNickname) {
-    throw createHttpError(409, 'Пользователь с таким никнеймом уже существует');
+    throw createHttpError(409, 'Користувач з таким нікнеймом вже існує');
   }
 
   // Hash password
@@ -68,6 +68,13 @@ export const registerUser = async (userData) => {
       email: user.email,
       name: user.name,
       surname: user.surname,
+      photo: user.photo,
+      balance: user.balance,
+      passportValid: user.passport_valid,
+      isAdmin: user.is_admin,
+      lastOnline: user.last_online,
+      isOnline: user.is_online,
+      banned: user.banned,
     },
     ...tokens,
   };
@@ -81,18 +88,18 @@ export const loginUser = async ({ emailOrNickname, password }) => {
   }
 
   if (!user) {
-    throw createHttpError(401, 'Неверный логин или пароль');
+    throw createHttpError(401, 'Невірний логін або пароль');
   }
 
   // Check if user is banned
   if (user.banned) {
-    throw createHttpError(403, 'Ваш аккаунт заблокирован');
+    throw createHttpError(403, 'Ваш акаунт заблоковано');
   }
 
   // Verify password
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
-    throw createHttpError(401, 'Неверный логин или пароль');
+    throw createHttpError(401, 'Невірний логін або пароль');
   }
 
   // Delete old sessions for this user
@@ -117,6 +124,13 @@ export const loginUser = async ({ emailOrNickname, password }) => {
       email: user.email,
       name: user.name,
       surname: user.surname,
+      photo: user.photo,
+      balance: user.balance,
+      passportValid: user.passport_valid,
+      isAdmin: user.is_admin,
+      lastOnline: user.last_online,
+      isOnline: user.is_online,
+      banned: user.banned,
     },
     ...tokens,
   };
@@ -127,30 +141,30 @@ export const refreshUserTokens = async (refreshToken) => {
   try {
     payload = jwt.verify(refreshToken, JWT_SECRET);
   } catch (error) {
-    throw createHttpError(401, 'Refresh token недействителен');
+    throw createHttpError(401, 'Refresh token недійсний');
   }
 
   const session = await Session.findByRefreshToken(refreshToken);
   if (!session) {
-    throw createHttpError(401, 'Сессия не найдена');
+    throw createHttpError(401, 'Сесія не знайдена');
   }
 
   const isRefreshTokenExpired =
     new Date() > new Date(session.refresh_token_valid_until);
   if (isRefreshTokenExpired) {
     await Session.deleteById(session.id);
-    throw createHttpError(401, 'Refresh token истек');
+    throw createHttpError(401, 'Refresh token прострочений');
   }
 
   const user = await User.findById(session.user_id);
   if (!user) {
     await Session.deleteById(session.id);
-    throw createHttpError(401, 'Пользователь не найден');
+    throw createHttpError(401, 'Користувача не знайдено');
   }
 
   if (user.banned) {
     await Session.deleteById(session.id);
-    throw createHttpError(403, 'Ваш аккаунт заблокирован');
+    throw createHttpError(403, 'Ваш акаунт заблоковано');
   }
 
   // Generate new tokens
@@ -169,6 +183,13 @@ export const refreshUserTokens = async (refreshToken) => {
       email: user.email,
       name: user.name,
       surname: user.surname,
+      photo: user.photo,
+      balance: user.balance,
+      passportValid: user.passport_valid,
+      isAdmin: user.is_admin,
+      lastOnline: user.last_online,
+      isOnline: user.is_online,
+      banned: user.banned,
     },
     ...newTokens,
   };
@@ -185,11 +206,11 @@ export const logoutUser = async (accessToken) => {
 export const getCurrentUser = async (userId) => {
   const user = await User.findById(userId);
   if (!user) {
-    throw createHttpError(404, 'Пользователь не найден');
+    throw createHttpError(404, 'Користувача не знайдено');
   }
 
   if (user.banned) {
-    throw createHttpError(403, 'Ваш аккаунт заблокирован');
+    throw createHttpError(403, 'Ваш акаунт заблоковано');
   }
 
   return {
@@ -198,8 +219,12 @@ export const getCurrentUser = async (userId) => {
     email: user.email,
     name: user.name,
     surname: user.surname,
+    photo: user.photo,
     balance: user.balance,
+    passportValid: user.passport_valid,
+    isAdmin: user.is_admin,
     lastOnline: user.last_online,
     isOnline: user.is_online,
+    banned: user.banned,
   };
 };

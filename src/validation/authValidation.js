@@ -40,9 +40,9 @@ export const registerValidation = Joi.object({
     .required()
     .messages({
       'string.pattern.base':
-        'Никнейм может содержать только английские буквы, цифры и _',
-      'string.min': 'Никнейм должен содержать минимум 3 символа',
-      'string.max': 'Никнейм не должен превышать 16 символов',
+        'Нікнейм може містити лише англійські літери, цифри та _',
+      'string.min': 'Нікнейм повинен містити мінімум 3 символи',
+      'string.max': 'Нікнейм не повинен перевищувати 16 символів',
       'nickname.invalid': '{#message}',
     }),
   email: Joi.string()
@@ -51,7 +51,7 @@ export const registerValidation = Joi.object({
     .custom(emailValidator, 'email validation')
     .required()
     .messages({
-      'string.email': 'Введите корректный email',
+      'string.email': 'Введіть коректний email',
       'email.invalid': '{#message}',
     }),
   password: Joi.string()
@@ -60,12 +60,12 @@ export const registerValidation = Joi.object({
     .custom(passwordValidator, 'password validation')
     .required()
     .messages({
-      'string.min': 'Пароль должен содержать минимум 8 символов',
-      'string.max': 'Пароль слишком длинный',
+      'string.min': 'Пароль повинен містити мінімум 8 символів',
+      'string.max': 'Пароль занадто довгий',
       'password.invalid': '{#message}',
     }),
   confirmPassword: Joi.string().valid(Joi.ref('password')).required().messages({
-    'any.only': 'Пароли не совпадают',
+    'any.only': 'Паролі не співпадають',
   }),
 });
 
@@ -76,14 +76,14 @@ export const loginValidation = Joi.object({
     .max(255) // Prevent DoS
     .required()
     .messages({
-      'any.required': 'Введите никнейм или email',
-      'string.min': 'Минимум 3 символа',
-      'string.max': 'Слишком длинная строка',
+      'any.required': 'Введіть нікнейм або email',
+      'string.min': 'Мінімум 3 символи',
+      'string.max': 'Занадто довгий рядок',
     }),
   password: Joi.string().min(8).max(128).required().messages({
-    'string.min': 'Пароль должен содержать минимум 8 символов',
-    'string.max': 'Пароль слишком длинный',
-    'any.required': 'Пароль обязателен',
+    'string.min': 'Пароль повинен містити мінімум 8 символів',
+    'string.max': 'Пароль занадто довгий',
+    'any.required': "Пароль обов'язковий",
   }),
 });
 
@@ -92,7 +92,7 @@ export const refreshValidation = Joi.object({
     .required()
     .max(1000) // Prevent DoS
     .messages({
-      'any.required': 'Refresh token обязателен',
-      'string.max': 'Токен слишком длинный',
+      'any.required': "Refresh token обов'язковий",
+      'string.max': 'Токен занадто довгий',
     }),
 });

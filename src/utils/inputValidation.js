@@ -64,7 +64,7 @@ export const validateNickname = (nickname) => {
   if (filter.isProfane(cleanNickname)) {
     return {
       isValid: false,
-      reason: 'Никнейм содержит неприемлемые слова',
+      reason: 'Нікнейм містить неприйнятні слова',
     };
   }
 
@@ -72,7 +72,7 @@ export const validateNickname = (nickname) => {
   if (/[_]{3,}|[0-9]{8,}/.test(cleanNickname)) {
     return {
       isValid: false,
-      reason: 'Никнейм не должен содержать подряд более 2 одинаковых символов',
+      reason: 'Нікнейм не повинен містити підряд більше 2 однакових символів',
     };
   }
 
@@ -89,7 +89,7 @@ export const validateNickname = (nickname) => {
     if (pattern.test(cleanNickname)) {
       return {
         isValid: false,
-        reason: 'Никнейм имеет недопустимый формат',
+        reason: 'Нікнейм має недопустимий формат',
       };
     }
   }
@@ -99,7 +99,7 @@ export const validateNickname = (nickname) => {
   if (meaningfulChars.length < 2) {
     return {
       isValid: false,
-      reason: 'Никнейм должен содержать минимум 2 буквы',
+      reason: 'Нікнейм повинен містити мінімум 2 літери',
     };
   }
 
@@ -114,7 +114,7 @@ export const validateEmail = (email) => {
   if (!validator.isEmail(email)) {
     return {
       isValid: false,
-      reason: 'Некорректный формат email',
+      reason: 'Некоректний формат email',
     };
   }
 
@@ -132,7 +132,7 @@ export const validateEmail = (email) => {
   if (disposableDomains.includes(emailDomain)) {
     return {
       isValid: false,
-      reason: 'Временные email адреса не разрешены',
+      reason: 'Тимчасові email адреси не дозволені',
     };
   }
 
@@ -181,7 +181,7 @@ export const validatePassword = (password) => {
   if (commonPasswords.includes(password.toLowerCase())) {
     return {
       isValid: false,
-      reason: 'Пароль слишком простой. Используйте более сложную комбинацию.',
+      reason: 'Пароль занадто простий. Використайте складнішу комбінацію.',
     };
   }
 
@@ -189,14 +189,14 @@ export const validatePassword = (password) => {
   if (/(.)\1{2,}/.test(password)) {
     return {
       isValid: false,
-      reason: 'Пароль не должен содержать более 2 одинаковых символов подряд',
+      reason: 'Пароль не повинен містити більше 2 однакових символів підряд',
     };
   }
 
   if (issues.length > 0) {
     return {
       isValid: false,
-      reason: `Пароль должен содержать: ${issues.join(', ')}`,
+      reason: `Пароль повинен містити: ${issues.join(', ')}`,
     };
   }
 

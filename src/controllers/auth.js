@@ -12,7 +12,7 @@ const register = ctrlWrapper(async (req, res) => {
 
   res.status(201).json({
     status: 201,
-    message: 'Пользователь успешно зарегистрирован',
+    message: 'Користувач успішно зареєстрований',
     data: result,
   });
 });
@@ -22,7 +22,7 @@ const login = ctrlWrapper(async (req, res) => {
 
   res.status(200).json({
     status: 200,
-    message: 'Успешный вход в систему',
+    message: 'Успішний вхід в систему',
     data: result,
   });
 });
@@ -33,7 +33,7 @@ const refresh = ctrlWrapper(async (req, res) => {
 
   res.status(200).json({
     status: 200,
-    message: 'Токены успешно обновлены',
+    message: 'Токени успішно оновлені',
     data: result,
   });
 });
@@ -47,7 +47,7 @@ const logout = ctrlWrapper(async (req, res) => {
 
   res.status(204).json({
     status: 204,
-    message: 'Успешный выход из системы',
+    message: 'Успішний вихід з системи',
   });
 });
 
@@ -56,7 +56,7 @@ const me = ctrlWrapper(async (req, res) => {
 
   res.status(200).json({
     status: 200,
-    message: 'Данные пользователя получены',
+    message: 'Дані користувача отримані',
     data: user,
   });
 });
