@@ -4,6 +4,7 @@ import createHttpError from 'http-errors';
 
 import { User } from '../models/auth/User.js';
 import { Session } from '../models/auth/Session.js';
+import { uploadToCloudinary, deleteFromCloudinary, getPublicIdFromUrl } from '../config/cloudinary.js';
 import { env } from '../utils/env.js';
 
 const JWT_SECRET = env('JWT_SECRET');
@@ -192,6 +193,88 @@ export const refreshUserTokens = async (refreshToken) => {
       banned: user.banned,
     },
     ...newTokens,
+  };
+};
+
+export const updateProfilePhoto = async (userId, file) => {
+  if (!file) {
+    throw createHttpError(400, 'Фото профілю обов\'язкове');
+  }
+
+  const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+  if (!allowedMimeTypes.includes(file.mimetype)) {
+    throw createHttpError(400, 'Підтримуються лише JPEG та PNG файли');
+  }
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw createHttpError(404, 'Користувача не знайдено');
+  }
+
+  const previousPhotoUrl = user.photo;
+  const fileName = `profile_${userId}_${Date.now()}`;
+  const folder = 'TripleGeneralAPI/users';
+
+  let uploadResult;
+  try {
+    uploadResult = await uploadToCloudinary(file.buffer, folder, fileName);
+  } catch (error) {
+    console.error('Failed to upload profile photo to Cloudinary:', error.message);
+    throw createHttpError(500, 'Не вдалося завантажити фото профілю');
+  }
+
+  const newPhotoUrl = uploadResult.url;
+
+  try {
+    const updated = await User.updatePhoto(userId, newPhotoUrl);
+    if (!updated) {
+      throw new Error('Database update failed');
+    }
+  } catch (error) {
+    const publicId = getPublicIdFromUrl(newPhotoUrl);
+    if (publicId) {
+      try {
+        await deleteFromCloudinary(publicId);
+      } catch (deleteError) {
+        console.error(
+          'Failed to rollback uploaded profile photo from Cloudinary:',
+          deleteError.message,
+        );
+      }
+    }
+    console.error('Failed to update user photo in database:', error.message);
+    throw createHttpError(500, 'Не вдалося оновити фото профілю');
+  }
+
+  if (previousPhotoUrl && previousPhotoUrl.includes('cloudinary.com')) {
+    const previousPublicId = getPublicIdFromUrl(previousPhotoUrl);
+    if (previousPublicId) {
+      try {
+        await deleteFromCloudinary(previousPublicId);
+      } catch (error) {
+        console.error(
+          'Failed to delete previous profile photo from Cloudinary:',
+          error.message,
+        );
+      }
+    }
+  }
+
+  const updatedUser = await User.findById(userId);
+
+  return {
+    id: updatedUser.id,
+    username: updatedUser.username,
+    email: updatedUser.email,
+    name: updatedUser.name,
+    surname: updatedUser.surname,
+    photo: updatedUser.photo,
+    balance: updatedUser.balance,
+    passportValid: updatedUser.passport_valid,
+    isAdmin: updatedUser.is_admin,
+    lastOnline: updatedUser.last_online,
+    isOnline: updatedUser.is_online,
+    banned: updatedUser.banned,
   };
 };
 

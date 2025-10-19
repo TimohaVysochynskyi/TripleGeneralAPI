@@ -4,6 +4,17 @@ export const errorHandler = (error, req, res, next) => {
   // Log the error for debugging
   console.error('❌ Error:', error);
 
+  if (error?.name === 'MulterError') {
+    let message = error.message;
+    if (error.code === 'LIMIT_FILE_SIZE') {
+      message = 'Розмір файлу не повинен перевищувати 5MB';
+    }
+
+    return res
+      .status(400)
+      .send({ status: 400, message, data: null });
+  }
+
   if (error instanceof HttpError) {
     return res
       .status(error.status)

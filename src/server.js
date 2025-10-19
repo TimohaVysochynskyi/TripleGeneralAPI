@@ -22,12 +22,12 @@ export const setupServer = async () => {
   const app = express();
 
   // CORS must be first to handle preflight requests
-  app.use(
-    cors({
-      origin: env('CLIENT_DOMAIN'),
-      credentials: true,
-    }),
-  );
+  // app.use(
+  //   cors({
+  //     origin: env('CLIENT_DOMAIN'),
+  //     credentials: true,
+  //   }),
+  // );
 
   // Security headers
   app.use(

@@ -50,4 +50,13 @@ export class User {
       id,
     ]);
   }
+
+  static async updatePhoto(id, photoUrl) {
+    const [result] = await pool.execute(
+      'UPDATE users SET photo = ? WHERE id = ?',
+      [photoUrl, id],
+    );
+
+    return result.affectedRows > 0;
+  }
 }

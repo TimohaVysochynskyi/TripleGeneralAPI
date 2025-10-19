@@ -1,9 +1,12 @@
+import createHttpError from 'http-errors';
+
 import {
   registerUser,
   loginUser,
   refreshUserTokens,
   logoutUser,
   getCurrentUser,
+  updateProfilePhoto,
 } from '../services/auth.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 
@@ -61,4 +64,20 @@ const me = ctrlWrapper(async (req, res) => {
   });
 });
 
-export { register, login, refresh, logout, me };
+const updatePhoto = ctrlWrapper(async (req, res) => {
+  if (!req.file) {
+    throw createHttpError(400, 'Фото профілю обов\'язкове');
+  }
+
+  const user = await updateProfilePhoto(req.user.id, req.file);
+
+  res.status(200).json({
+    status: 200,
+    message: 'Фото профілю успішно оновлено',
+    data: {
+      user,
+    },
+  });
+});
+
+export { register, login, refresh, logout, me, updatePhoto };
