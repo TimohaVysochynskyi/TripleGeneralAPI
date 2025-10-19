@@ -2,7 +2,14 @@ import { Router } from 'express';
 import multer from 'multer';
 import createHttpError from 'http-errors';
 
-import { register, login, refresh, logout, me, updatePhoto } from '../controllers/auth.js';
+import {
+  register,
+  login,
+  refresh,
+  logout,
+  me,
+  updatePhoto,
+} from '../controllers/auth.js';
 import { validateBody } from '../middlewares/validateBody.js';
 import { authenticate } from '../middlewares/authenticate.js';
 import {

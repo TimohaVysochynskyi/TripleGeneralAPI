@@ -66,7 +66,7 @@ const me = ctrlWrapper(async (req, res) => {
 
 const updatePhoto = ctrlWrapper(async (req, res) => {
   if (!req.file) {
-    throw createHttpError(400, 'Фото профілю обов\'язкове');
+    throw createHttpError(400, "Фото профілю обов'язкове");
   }
 
   const user = await updateProfilePhoto(req.user.id, req.file);

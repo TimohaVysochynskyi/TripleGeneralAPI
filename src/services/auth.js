@@ -4,7 +4,11 @@ import createHttpError from 'http-errors';
 
 import { User } from '../models/auth/User.js';
 import { Session } from '../models/auth/Session.js';
-import { uploadToCloudinary, deleteFromCloudinary, getPublicIdFromUrl } from '../config/cloudinary.js';
+import {
+  uploadToCloudinary,
+  deleteFromCloudinary,
+  getPublicIdFromUrl,
+} from '../config/cloudinary.js';
 import { env } from '../utils/env.js';
 
 const JWT_SECRET = env('JWT_SECRET');
@@ -198,7 +202,7 @@ export const refreshUserTokens = async (refreshToken) => {
 
 export const updateProfilePhoto = async (userId, file) => {
   if (!file) {
-    throw createHttpError(400, 'Фото профілю обов\'язкове');
+    throw createHttpError(400, "Фото профілю обов'язкове");
   }
 
   const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/jpg'];
@@ -219,7 +223,10 @@ export const updateProfilePhoto = async (userId, file) => {
   try {
     uploadResult = await uploadToCloudinary(file.buffer, folder, fileName);
   } catch (error) {
-    console.error('Failed to upload profile photo to Cloudinary:', error.message);
+    console.error(
+      'Failed to upload profile photo to Cloudinary:',
+      error.message,
+    );
     throw createHttpError(500, 'Не вдалося завантажити фото профілю');
   }
 

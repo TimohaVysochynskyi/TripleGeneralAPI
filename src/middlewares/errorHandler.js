@@ -10,9 +10,7 @@ export const errorHandler = (error, req, res, next) => {
       message = 'Розмір файлу не повинен перевищувати 5MB';
     }
 
-    return res
-      .status(400)
-      .send({ status: 400, message, data: null });
+    return res.status(400).send({ status: 400, message, data: null });
   }
 
   if (error instanceof HttpError) {
@@ -21,14 +19,12 @@ export const errorHandler = (error, req, res, next) => {
       .send({ status: error.status, message: error.message, data: error });
   }
 
-  res
-    .status(500)
-    .send({
-      status: 500,
-      message: 'Something went wrong',
-      data: {
-        message: error.message,
-        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
-      },
-    });
+  res.status(500).send({
+    status: 500,
+    message: 'Something went wrong',
+    data: {
+      message: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
+    },
+  });
 };
